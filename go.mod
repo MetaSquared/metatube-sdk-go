@@ -1,4 +1,4 @@
-module github.com/metatube-community/metatube-sdk-go
+module github.com/MetaSquared/metatube-sdk-go
 
 go 1.23
 
