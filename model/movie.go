@@ -33,9 +33,9 @@ func (m *MovieSearchResult) IsValid() bool {
 }
 
 type MovieReviewInfo struct {
-	ID          string                                   `json:"id" gorm:"primaryKey"`
-	Provider    string                                   `json:"provider" gorm:"primaryKey"`
-	Reviews     datatypes.JSONType[[]*MovieReviewDetail] `json:"reviews"`
+	ID          string                                  `json:"id" gorm:"primaryKey"`
+	Provider    string                                  `json:"provider" gorm:"primaryKey"`
+	Reviews     datatypes.JSONSlice[*MovieReviewDetail] `json:"reviews"`
 	TimeTracker `json:"-"`
 }
 
@@ -44,11 +44,11 @@ func (*MovieReviewInfo) TableName() string {
 }
 
 func (m *MovieReviewInfo) IsValid() bool {
-	if !(m.ID != "" && m.Provider != "") {
+	if m.ID == "" || m.Provider == "" {
 		return false
 	}
 	// reviews can be empty.
-	for _, review := range m.Reviews.Data() {
+	for _, review := range m.Reviews {
 		if !review.IsValid() {
 			return false
 		}

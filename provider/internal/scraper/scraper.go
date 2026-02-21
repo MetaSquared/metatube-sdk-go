@@ -13,6 +13,7 @@ import (
 
 var (
 	_ provider.Provider             = (*Scraper)(nil)
+	_ provider.ProxySetter          = (*Scraper)(nil)
 	_ provider.RequestTimeoutSetter = (*Scraper)(nil)
 )
 
@@ -25,7 +26,7 @@ type Scraper struct {
 	c        *colly.Collector
 }
 
-// NewScraper returns a *Scraper that implements provider.Provider .
+// NewScraper returns a *Scraper that implements provider.Provider.
 func NewScraper(name, base string, priority float64, lang language.Tag, opts ...Option) *Scraper {
 	baseURL, err := url.Parse(base)
 	if err != nil {
@@ -76,6 +77,9 @@ func (s *Scraper) ParseActorIDFromURL(string) (string, error) { panic("unimpleme
 
 // ClonedCollector returns cloned internal collector.
 func (s *Scraper) ClonedCollector() *colly.Collector { return s.c.Clone() }
+
+// SetProxy sets http or socks5 proxy for HTTP requests.
+func (s *Scraper) SetProxy(proxyURL string) error { return s.c.SetProxy(proxyURL) }
 
 // SetRequestTimeout sets timeout for HTTP requests.
 func (s *Scraper) SetRequestTimeout(timeout time.Duration) { s.c.SetRequestTimeout(timeout) }

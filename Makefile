@@ -23,7 +23,6 @@ UNIX_ARCH_LIST = \
 	darwin-amd64 \
 	darwin-amd64-v3 \
 	darwin-arm64 \
-	freebsd-386 \
 	freebsd-amd64 \
 	freebsd-amd64-v3 \
 	freebsd-arm64 \
@@ -44,7 +43,11 @@ WINDOWS_ARCH_LIST = \
 	windows-amd64-v3 \
 	windows-arm64
 
-all: server
+all: development
+
+development: BUILD_TAGS += experimental
+development:
+	$(GO_BUILD) -o $(BUILD_DIR)/$(SERVER_NAME) $(SERVER_CODE)
 
 server:
 	$(GO_BUILD) -o $(BUILD_DIR)/$(SERVER_NAME) $(SERVER_CODE)
@@ -57,9 +60,6 @@ darwin-amd64-v3:
 
 darwin-arm64:
 	GOARCH=arm64 GOOS=darwin $(GO_BUILD) -o $(BUILD_DIR)/$(SERVER_NAME)-$@ $(SERVER_CODE)
-
-freebsd-386:
-	GOARCH=386 GOOS=freebsd $(GO_BUILD) -o $(BUILD_DIR)/$(SERVER_NAME)-$@ $(SERVER_CODE)
 
 freebsd-amd64:
 	GOARCH=amd64 GOOS=freebsd $(GO_BUILD) -o $(BUILD_DIR)/$(SERVER_NAME)-$@ $(SERVER_CODE)
